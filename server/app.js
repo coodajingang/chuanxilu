@@ -3,10 +3,11 @@ const logger = require('./logging/logger')
 // Database connection imports
 const db = require('./db/dbConnection');
 
-const magicBook = require('./db/models/magicBook')
+const MagicBook = require('./db/models/magicBook')
+const Bookshelf = require('./db/models/bookshelf')
+const History = require('./db/models/readHistory')
 /************************************************************* */
 // Establish database connection
-
 
 const app = express()
 
@@ -24,30 +25,14 @@ app.get("/everyday", getEveryDay)
 
 async function getEveryDay(req, res, next) {
     let response;
+    let bookName = req.query.book
+    let seqNo = req.query.seqno
+    let openId = req.query.openid
+    logger.info("GET Request [everyday] ", req.query)
     try {
+        let history = await History.findOne({openId:openId})
         response = await magicBook.findOne({seqNo: 1}).exec()
         logger.info("RESONSE:", {res: response})
-        return res.status(200).send(response);
-    }
-    catch(err) {
-        logger.error("Error in getOrderDetails Controller", {meta: err});
-        return res.status(404).send({httpStatus: 404, status: "failed", errorDetails: err});
-    }
-};
-
-async function saveEveryDay(req, res, next) {
-    let response;
-    try {
-        let book = new magicBook({
-            seqNo: 1,
-            bookName: "chuanxilu",
-            author: "wangyangming",
-            chapter: "aiwen",
-            content: "alsldfla;s;df;a;sdfasdf",
-            translate: "askkxkallalsdlfasdf"
-        })
-        response = await book.save()
-        logger.info("save RESONSE:", {res: response})
         return res.status(200).send(response);
     }
     catch(err) {
