@@ -1,6 +1,6 @@
-import winston from 'winston';
+const winston = require('winston');
 // import winstonMongoTransport from 'winston-mongodb'; // This will expose winston.transports.MongoDB
-import config from 'config';
+const config = require('config');
 
 // Winston needs to be told about color coding, but it only takes effect on loggers where the format parameter has a colorize called
 winston.addColors({

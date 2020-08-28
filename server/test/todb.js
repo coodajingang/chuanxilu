@@ -1,4 +1,4 @@
-const Book = require('./db/models/bookshelf')
+const Book = require('../db/models/bookshelf')
 
 let book = new Book({
   bookName: '传习录',

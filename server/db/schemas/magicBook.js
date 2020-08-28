@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import validator from 'validator';
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 let magicBookSchema = new mongoose.Schema({
     bookName: {
@@ -14,15 +14,27 @@ let magicBookSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    chapter: {
+    chapter: { // 章节
         type: String,
         required: true
     },
-    content: {
+    caption: { // 章节说明
+        type: String,
+        required: false
+    },
+    subHead: { // 段落
+        type: String,
+        required: true
+    },
+    content: { // 原文
       type: String,
       required: true
-  },
-    translate: {
+    },
+    translate: { // 译文
+        type: String,
+        required: false
+    },
+    comment: { // 解读 注
         type: String,
         required: false
     }

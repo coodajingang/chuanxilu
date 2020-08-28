@@ -1,7 +1,11 @@
 const fs = require('fs')
 const readline = require('readline')
 
-let stream = fs.createReadStream('./chuanxi.json', {flags : "r", encoding : 'utf8'}); 
+const db = require('../db/dbConnection')
+db.dbConnection();
+const MagicBook = require('../db/models/magicBook')
+
+let stream = fs.createReadStream(__dirname + '/chuanxi.json', {flags : "r", encoding : 'utf8'}); 
 
 const read = readline.createInterface({
     input: stream,
@@ -13,6 +17,37 @@ let count = 0
 stream.on("error", function() {
     console.log("Open file error!")
 })
+
+async function save2DB(all) {
+    console.log("db 章数" + all.length)
+    let delres = await MagicBook.deleteMany({bookName: '传习录'}).exec()
+    console.log("Delete res: ", delres)
+
+    let count = 0 ;
+    for (c in all) {
+        let fras = all[c].fras
+        for (f in fras) {
+            let book = new MagicBook({
+                bookName: '传习录',
+                author: '王阳明',
+                seqNo: fras[f].seqNo,
+                chapter: all[c].cs,
+                caption:  all[c].csdesc,
+                subHead: fras[f].head,
+                content: fras[f].ptext,
+                translate: fras[f].trans,
+                comment: fras[f].answ
+            })
+            let res = await book.save()
+            count++
+            console.log(count + ": save db: ", res)
+        }
+    }
+
+    console.log("SAVE DB complete!") 
+    let total = await MagicBook.count({bookName: '传习录'}).exec()
+    console.log(total, count)
+}
 
 stream.on("end", function() {
     console.log("Read file End!")
@@ -32,11 +67,13 @@ stream.on("end", function() {
     console.log("Yuandian count:", yuandianCount, fcount)
 
     let str = JSON.stringify(all, "", "\t")
-    fs.writeFile('./chuanxinew.json', str, (err)=>{
+    fs.writeFile(__dirname + '/chuanxinew.json', str, (err)=>{
         if (err) {
             console.log("Write error!", err)
         }
     })
+
+    save2DB(all)
 })
 
 // stream.on('data', function(data){

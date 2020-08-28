@@ -1,14 +1,16 @@
-import express from 'express'
-import logger from './logging/logger'
+const express = require('express')
+const logger = require('./logging/logger')
 // Database connection imports
-import db from './db/dbConnection';
+const db = require('./db/dbConnection');
 
-import magicBook from './db/models/magicBook'
+const magicBook = require('./db/models/magicBook')
 /************************************************************* */
 // Establish database connection
-db.dbConnection();
+
 
 const app = express()
+
+db.dbConnection()
 
 const port = 3000
 

@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import config from 'config';
-import logger from '../logging/logger'
+const mongoose = require('mongoose');
+const config = require('config');
+const logger = require('../logging/logger');
 
 let dbConnection;
 
@@ -36,4 +36,4 @@ let getDBConnection = async() => {
 // require("./models/user");
 
 // Exporting the connection
-exports.dbConnection = () => getDBConnection();
+module.exports.dbConnection = () => getDBConnection();

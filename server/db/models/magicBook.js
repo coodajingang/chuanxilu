@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-import magicBookSchema from '../schemas/magicBook.js';
+const magicBookSchema = require('../schemas/magicBook.js');
 
 magicBookSchema.index({bookName: 1, seqNo: 1}, {unique: true});
 

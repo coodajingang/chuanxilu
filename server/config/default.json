@@ -14,7 +14,7 @@
       "user": "weals",
       "pwd": "weals123!",
       "dbname": "weals",
-      "url": "mongodb://127.0.0.1:27017/weals",
+      "url": "mongodb://47.105.172.108:27017/weals",
       "use_new_url_parser": true,
       "use_create_index": true
   },

@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import validator from 'validator';
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 // 书架 
 let readHistorySchema = new mongoose.Schema({
@@ -15,13 +15,17 @@ let readHistorySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    bookName: {
+        type: String,
+        required: true
+    },
     readChapter: {
         type: Number,
-        required: true
+        required: false
     },
     readFragment: {
       type: Number,
-      required: true
+      required: false
     },
     today: {
         type: Date,
@@ -32,7 +36,7 @@ let readHistorySchema = new mongoose.Schema({
       required: false
    },
     history: {
-        type: String,
+        type: [Number],
         required: false
     }
 })

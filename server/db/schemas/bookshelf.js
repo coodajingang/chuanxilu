@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import validator from 'validator';
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 // 书架 
 let bookshelfSchema = new mongoose.Schema({
