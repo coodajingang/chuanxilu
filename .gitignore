@@ -67,6 +67,6 @@ typings/
 .next
 
 /logging/*
-/server/logging/*
+/server/logging/logs/*
 /server/public/*
 /web/dist/*
