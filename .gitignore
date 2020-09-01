@@ -68,5 +68,4 @@ typings/
 
 /logging/*
 /server/logging/logs/*
-/server/public/*
 /web/dist/*
