@@ -18,8 +18,12 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.timestamp(),
-    winston.format.align(),
-    winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message} ${info.meta ? info.meta : ''}`)
+    // winston.format.align(),
+    //winston.format.prettyPrint()
+    winston.format.splat(),
+    //winston.format.json(),
+    winston.format.printf(info => `${info.timestamp} [${info.level}]: ${info.message} `),
+    winston.format.simple()
   ),
   transports: [
     new winston.transports.File({ 

@@ -28,7 +28,7 @@ let readHistorySchema = new mongoose.Schema({
       required: false
     },
     today: {
-        type: Date,
+        type: String,
         required: false
     },
     todaySeqno: {

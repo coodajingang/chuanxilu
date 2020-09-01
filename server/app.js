@@ -1,11 +1,14 @@
 const express = require('express')
+const path = require('path');
 const logger = require('./logging/logger')
 // Database connection imports
 const db = require('./db/dbConnection');
 
 const MagicBook = require('./db/models/magicBook')
 const Bookshelf = require('./db/models/bookshelf')
-const History = require('./db/models/readHistory')
+const History = require('./db/models/readHistory');
+
+const moment = require('moment')
 /************************************************************* */
 // Establish database connection
 
@@ -19,7 +22,7 @@ app.get("/", (req, res) => {
     res.send("Hello world!")
 })
 
-app.get("/testdata", saveEveryDay)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/everyday", getEveryDay)
 
@@ -30,13 +33,62 @@ async function getEveryDay(req, res, next) {
     let openId = req.query.openid
     logger.info("GET Request [everyday] ", req.query)
     try {
-        let history = await History.findOne({openId:openId})
-        response = await magicBook.findOne({seqNo: 1}).exec()
-        logger.info("RESONSE:", {res: response})
+        if (!openId) {
+            logger.info("No openid found!")
+            return res.status(200).send("No User!")
+        }
+        if (!bookName) {
+            //logger.info("No BookName found!")
+            //return res.status(200).send("No Book name!")
+            bookName = "传习录"
+        }
+        let bookShelf = await Bookshelf.findOne({bookName: bookName}).exec();
+        if (!bookShelf) {
+            logger.info("No found book ")
+            return res.status(200).send("No found book!")
+        } 
+        let total = bookShelf.totalFragments 
+        if (!total || total <= 0) {
+            logger.info("Book %s has no sections ", bookName)
+            return res.status(200).send("No found book section!")
+        }
+
+        let history  = await History.findOne({openId: openId, bookName: bookName}).exec()
+        if (!history) {
+            logger.info("Register history %s %s ", openId, bookName)
+            let regHistory = new History({
+                bookName: bookName,
+                openId: openId,
+                name: openId,
+                readChapter: 0,
+                readFragment: 0,
+                history: []
+            })
+            await regHistory.save();
+            history = await History.findOne({openId:openId, bookName: bookName}).exec();
+        }
+        let seqNo = history.todaySeqno
+        let today = moment().format('YYYY-MM-DD')
+        if (today === history.today) {
+            ;
+        } else {
+            do {
+                seqNo = Math.ceil(Math.random() * total ) + 1
+            } while (seqNo in history.history)
+            history.history.push(seqNo)
+            history.today = today
+            history.todaySeqno = seqNo 
+            await history.save();
+        }
+        
+        logger.info("SeqNO: %d", seqNo)
+
+        response = await MagicBook.findOne({seqNo: seqNo}).exec()
+        logger.info("RESONSE: ", {response: response})
         return res.status(200).send(response);
     }
     catch(err) {
-        logger.error("Error in getOrderDetails Controller", {meta: err});
+        logger.error("Error in get everyday", {meta: err});
         return res.status(404).send({httpStatus: 404, status: "failed", errorDetails: err});
     }
 };

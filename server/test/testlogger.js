@@ -1,4 +1,10 @@
 const logger = require('../logging/logger.js')
 
-logger.info("test")
-logger.info("asdfasdf", {name:'1234'})
+
+ let req = {
+   name: '1223',
+   age: 18 
+ }
+
+logger.info("test %d %s", 18, 'name', {x:req})
+logger.info("asdfasdf", {name:'1234', req: req})
